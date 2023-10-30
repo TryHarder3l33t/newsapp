@@ -1,9 +1,16 @@
+/**
+ * Sequelize can be used with mysql and other dbs so you specify postgres as a dialect
+ * The node server uses PG to connect to the postgres server on
+ * postgres://user:pass@localhost:5432/dbname'
+ */
+
 export const dbconfig = {
-  HOST: 'localhost' || process.env.HOST,
-  USER: 'newspaperdbrole' || process.env.USER,
-  PASSWORD: '123' || process.env.password,
-  DB: 'newspaperdb' || process.env.DB,
-  DIALECT: 'postgres' || process.env.DIALECT,
+  HOST: process.env.HOST || 'localhost',
+  USER: process.env.USER || 'newspaperdbrole',
+  PASSWORD: process.env.password || '123',
+  DB: process.env.DB || 'newspaperdb',
+  DIALECT: process.env.DIALECT || 'postgres',
+  OPERATORALIAS: process.env.OPERATORALIAS || false,
   POOL: {
     MAX: 5,
     MIN: 0,

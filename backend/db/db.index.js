@@ -1,15 +1,23 @@
 import { Sequelize } from 'sequelize';
-import { dbconfig as db } from './db.config.js';
+import { dbconfig as config } from './db.config.js';
 
-export const sequelize = new Sequelize(db.DB, db.USER, db.PASSWORD, {
-  host: db.HOST,
-  dialect: db.DIALECT,
-  operatorAliases: false,
+/**
+ * Sequelize is an ORM used to interact with postgresql
+ */
+export const sequelize = new Sequelize(
+  config.DB,
+  config.USER,
+  config.PASSWORD,
+  {
+    host: config.HOST,
+    dialect: config.DIALECT,
+    operatorAliases: config.OPERATORALIAS,
 
-  POOL: {
-    max: db.POOL.MAX,
-    min: db.POOL.MAX,
-    acquire: db.POOL.ACQUIRE,
-    idle: db.POOL.IDLE,
-  },
-});
+    POOL: {
+      max: config.POOL.MAX,
+      min: config.POOL.MAX,
+      acquire: config.POOL.ACQUIRE,
+      idle: config.POOL.IDLE,
+    },
+  }
+);

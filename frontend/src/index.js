@@ -1,13 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes';
+import store from './store/store.index.js';
+import { Provider } from 'react-redux';
+/**
+ * Uses the div that has the div id root in the public index.html file
+ * This is the react root and the root renders the routeprovides where the router will handle
+ * what the react application components
+ */
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
