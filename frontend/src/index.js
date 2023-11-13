@@ -6,11 +6,13 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './routes';
 import store from './store/store.index.js';
 import { Provider } from 'react-redux';
+import { readUsers } from './store/user.store/user.slice.js';
 /**
  * Uses the div that has the div id root in the public index.html file
  * This is the react root and the root renders the routeprovides where the router will handle
  * what the react application components
  */
+//store.dispatch(readUsers());
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

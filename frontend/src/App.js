@@ -2,14 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { readUsers } from './store/user.store/user.actions';
 
 function App() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(readUsers());
-  }, []);
-
   return (
     <div className='App'>
       <header className='App-header'>
