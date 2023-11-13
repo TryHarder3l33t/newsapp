@@ -10,8 +10,11 @@ import { UserFeature } from '../../features/user/user.feature.js';
 
 export const UsersPage = () => {
   const dispatch = useDispatch();
+  const readUsersStatus = useSelector((state) => state.users.readUsersStatus);
   useEffect(() => {
-    dispatch(readUsers());
+    if (readUsersStatus === 'idle') {
+      dispatch(readUsers());
+    }
   }, []);
 
   const userIds = useSelector((state) => selectUsersIds(state));

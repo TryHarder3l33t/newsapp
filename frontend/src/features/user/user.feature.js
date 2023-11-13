@@ -1,13 +1,24 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { selectUsersById } from '../../store/user.store/user.slice';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectUsersById,
+  setReadUserStatusIdle,
+} from '../../store/user.store/user.slice';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const UserFeature = ({ userId }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const navigateToProfile = () => {
+    dispatch(setReadUserStatusIdle());
+    navigate(`/user/${userId}`);
+  };
+
   const user = useSelector((state) => selectUsersById(state, userId));
+
   return (
     <div>
-      <Link to={`/user/${user.id}`}>
+      <Link onClick={() => navigateToProfile()}>
         <h2>{`Hello ${user.firstName} ${user.lastName}`}</h2>
       </Link>
     </div>

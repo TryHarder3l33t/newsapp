@@ -6,6 +6,7 @@ import {
 } from '../../store/user.store/user.slice';
 import { useNavigate } from 'react-router-dom';
 
+// Sign Up
 export const UserCreatePage = () => {
   const dispatch = useDispatch();
   useEffect(() => {

@@ -56,6 +56,9 @@ const usersSlice = createSlice({
     setCreateUserStatusIdle(state, action) {
       state.createUserStatus = 'idle';
     },
+    setReadUserStatusIdle(state, action) {
+      state.readUserStatus = 'idle';
+    },
   },
   extraReducers(builder) {
     builder
@@ -100,7 +103,8 @@ const usersSlice = createSlice({
   },
 });
 
-export const { setCreateUserStatusIdle } = usersSlice.actions;
+export const { setCreateUserStatusIdle, setReadUserStatusIdle } =
+  usersSlice.actions;
 
 export default usersSlice.reducer;
 

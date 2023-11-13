@@ -1,19 +1,29 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { readUser } from '../../store/user.store/user.slice';
-import { Link, useParams } from 'react-router-dom';
+import {
+  readUser,
+  setReadUserStatusIdle,
+} from '../../store/user.store/user.slice';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export const UserPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userStatus = useSelector((state) => state.users.readUserStatus);
   const userError = useSelector((state) => state.users.readUserError);
 
   useEffect(() => {
-    dispatch(readUser(params.userId));
+    if (userStatus === 'idle') {
+      dispatch(readUser(params.userId));
+    }
   }, []);
 
   const user = useSelector((state) => state.users.user);
+
+  const navigateToProfile = () => {
+    navigate(`/profile/${user.id}`);
+  };
 
   if (userStatus === 'idle') {
     return <h1>Requesting</h1>;
@@ -26,7 +36,7 @@ export const UserPage = () => {
           user.lastName || 'No Last'
         }`}</h2>
         <h2>{`Email: ${user.email || 'No Email'}`}</h2>
-        <Link to={`/profile/${user.id}`}>
+        <Link onClick={() => navigateToProfile()}>
           <button type='button'>PROFILE</button>
         </Link>
       </div>
