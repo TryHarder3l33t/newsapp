@@ -27,13 +27,25 @@ userRouter.get('/', async (req, res) => {
 userRouter.get('/:userId', async (req, res) => {
   console.log(`userId ${req.params.userId}`);
   try {
-    const data = await User.findOne({
-      where: {
-        id: req.params.userId,
-      },
-    });
+    const data = await User.findByPk(req.params.userId);
+    console.log(data);
     res.json(data);
   } catch (error) {
     console.log(`FindOne error ${error}`);
   }
+});
+
+// Update
+userRouter.put('/', async (req, res) => {
+  try {
+    const data = await User.findByPk(req.body.id);
+    data.set({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+    });
+    const updated = await data.save();
+    console.log(updated);
+    res.json(updated);
+  } catch (error) {}
 });

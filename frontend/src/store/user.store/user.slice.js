@@ -34,7 +34,6 @@ export const createUser = createAsyncThunk(
 );
 // Read User
 export const readUser = createAsyncThunk('user/readUser', async (id) => {
-  console.log(`UserSlice id ${id}`);
   const response = await http.get(`/users/${id}`);
   return response.data;
 });
@@ -44,10 +43,14 @@ export const readUsers = createAsyncThunk('users/readUsers', async () => {
   return response.data;
 });
 // Update User
-export const updateUser = createAsyncThunk('user/updateUser', async (id) => {
-  const response = await http.put(`users/${id}`);
-  return response.data;
-});
+export const updateUser = createAsyncThunk(
+  'user/updateUser',
+  async (payload) => {
+    const response = await http.put(`users`, payload);
+    console.log(response);
+    return response.data;
+  }
+);
 
 const usersSlice = createSlice({
   name: 'users',
@@ -62,6 +65,17 @@ const usersSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(createUser.pending, (state, action) => {
+        state.createUserStatus = 'loading';
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.createUserStatus = 'succeeded';
+        // Set Token Etc
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.createUserStatus = 'error';
+        state.createUserError = `Error ${action.error.message}`;
+      })
       .addCase(readUsers.pending, (state, action) => {
         state.readUsersStatus = 'loading';
       })
@@ -89,16 +103,17 @@ const usersSlice = createSlice({
           state.readUserError = `Error ${action.error.message}`;
         }
       })
-      .addCase(createUser.pending, (state, action) => {
+      .addCase(updateUser.pending, (state, action) => {
         state.createUserStatus = 'loading';
       })
-      .addCase(createUser.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
+        usersAdapter.updateOne(state, action.payload);
+
         state.createUserStatus = 'succeeded';
-        // Set Token Etc
       })
-      .addCase(createUser.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.createUserStatus = 'error';
-        state.createUserError = `Error ${action.error.message}`;
+        state.updateUserError = `Error ${action.error.message}`;
       });
   },
 });
