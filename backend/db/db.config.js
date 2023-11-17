@@ -5,6 +5,7 @@
  */
 
 export const dbconfig = {
+  SECRET_KEY: process.env.SECRET_KEY || 'password123',
   HOST: process.env.HOST || 'localhost',
   USER: process.env.USER || 'newspaperdbrole',
   PASSWORD: process.env.password || '123',

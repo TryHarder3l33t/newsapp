@@ -1,15 +1,64 @@
 import express from 'express';
 import { User } from '../../db/models/users.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { dbconfig as config } from '../../db/db.config.js';
 
 export const userRouter = express.Router();
 
-// create
-userRouter.post('/', async (req, res) => {
+const secretKey = config.SECRET_KEY;
+
+// Login Token
+userRouter.get('/loginToken', async (req, res) => {
+  const authorizationHeader = req.headers.authorization;
+  if (!authorizationHeader) {
+    res.status(401).json({ message: 'Unathorized' });
+  }
+  const token = authorizationHeader.split(' ')[[1]];
+  const decoded = jwt.verify(token, secretKey);
+
+  const userId = decoded.userId;
+
+  const user = await User.findByPk(userId);
+
+  if (!user || !token) {
+    res.status(401).json({ message: 'Invalid Token' });
+  } else {
+    console.log(`     UsersBE 14 `);
+
+    res.json({
+      token,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      postId: user.postId,
+      anonId: user.anonId,
+    });
+  }
+});
+
+// create signup
+userRouter.post('/signup', async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  req.body.password = hashedPassword;
   try {
-    const data = await User.create(req.body);
-    res.json(data);
+    const user = await User.create(req.body);
+    const token = jwt.sign({ userId: user.id }, secretKey);
+    console.log(`users.js 24: ${JSON.stringify(user)}`);
+
+    res.status(201).json({
+      token,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      postId: user.postId,
+      anonId: user.anonId,
+    });
   } catch (error) {
-    console.log(error);
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      res.status(400).json({ message2: 'Username already exists' });
+    } else {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
   }
 });
 

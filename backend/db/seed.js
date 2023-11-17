@@ -8,26 +8,31 @@ export const seed = async () => {
       firstName: 'Eric M Rodgers',
       lastName: 'Rodgers',
       email: 'eric.m.rodgers@gmail.com',
+      password: 'password123',
     });
     const alicia = await User.create({
       firstName: 'Alicia',
       lastName: 'Rodgers',
       email: 'alicia.m.rodgers@gmail.com',
+      password: 'password123',
     });
     const dariusz = await User.create({
       firstName: 'Dariusz',
       lastName: 'Thomas',
       email: 'dariusz.i.thomas@gmail.com',
+      password: 'password123',
     });
     const mommy = await User.create({
       firstName: 'Tinamarie',
       lastName: 'Giraud',
       email: 'tinamarie@gmail.com',
+      password: 'password123',
     });
     const daddy = await User.create({
       firstName: 'Eric',
       lastName: 'Rodgers',
       email: 'eric@gmail.com',
+      password: 'password123',
     });
     console.log('success');
   } catch (error) {

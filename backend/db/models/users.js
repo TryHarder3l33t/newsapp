@@ -13,6 +13,17 @@ export const User = db.define('user', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
+  postId: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    unique: true,
+  },
+  anonId: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    unique: true,
+  },
+
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -22,6 +33,11 @@ export const User = db.define('user', {
     allowNull: false,
   },
   email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },

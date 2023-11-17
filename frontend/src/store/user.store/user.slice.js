@@ -12,23 +12,46 @@ const usersAdapter = createEntityAdapter({
 });
 
 const initialState = usersAdapter.getInitialState({
-  user: null,
+  user: {
+    token: null,
+    firstName: null,
+    lastName: null,
+  },
   createUserStatus: 'idle',
   readUserStatus: 'idle',
   readUsersStatus: 'idle',
   updateUserStatus: 'idle',
   deleteUserStatus: 'idle',
+  loginTokenStatus: 'idle',
   createUserError: null,
   readUserError: null,
   readUsersError: null,
   updateUserError: null,
   deleteUserError: null,
+  loginTokenError: null,
 });
+// Login With Token
+export const loginToken = createAsyncThunk(
+  'user/loginToken',
+  async (payload) => {
+    const response = await http.get('/users/loginToken', {
+      headers: {
+        Authorization: `Bearer ${payload}`,
+      },
+    });
+    return response.data;
+  }
+);
+
 // Create User
 export const createUser = createAsyncThunk(
   'user/createUser',
   async (payload) => {
-    const response = await http.post(`users`, payload);
+    const response = await http.post(`/users/signup`, payload);
+    const token = response.data.token;
+    if (token) {
+      localStorage.setItem('token', token);
+    }
     return response.data;
   }
 );
@@ -46,7 +69,7 @@ export const readUsers = createAsyncThunk('users/readUsers', async () => {
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (payload) => {
-    const response = await http.put(`users`, payload);
+    const response = await http.put(`/users`, payload);
     console.log(response);
     return response.data;
   }
@@ -70,18 +93,23 @@ const usersSlice = createSlice({
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.createUserStatus = 'succeeded';
+        state.user = action.payload;
         // Set Token Etc
       })
       .addCase(createUser.rejected, (state, action) => {
         state.createUserStatus = 'error';
-        state.createUserError = `Error ${action.error.message}`;
+        if (action.error.message === 'Request failed with status code 400') {
+          state.createUserError = 'Email already exists please REFRESH PAGE';
+        } else {
+          state.createUserError = 'Error please try again';
+        }
+        //state.createUserError = `Error ${action.error.message}`;
       })
       .addCase(readUsers.pending, (state, action) => {
         state.readUsersStatus = 'loading';
       })
       .addCase(readUsers.fulfilled, (state, action) => {
         state.readUsersStatus = 'succeeded';
-        // upsert is an update setAll writes over everything
         usersAdapter.upsertMany(state, action.payload);
       })
       .addCase(readUsers.rejected, (state, action) => {
@@ -114,6 +142,20 @@ const usersSlice = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.createUserStatus = 'error';
         state.updateUserError = `Error ${action.error.message}`;
+      })
+      .addCase(loginToken.pending, (state, action) => {
+        state.loginTokenStatus = 'loading';
+      })
+      .addCase(loginToken.fulfilled, (state, action) => {
+        state.loginTokenStatus = 'succeeded';
+        state.loginTokenError = null;
+        state.user = action.payload;
+      })
+      .addCase(loginToken.rejected, (state, action) => {
+        if (state.loginTokenStatus !== 'succeeded') {
+          state.loginTokenStatus = 'error';
+          state.loginTokenError = `Error ${action.error.message}`;
+        }
       });
   },
 });
