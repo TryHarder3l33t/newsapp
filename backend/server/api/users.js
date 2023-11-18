@@ -43,7 +43,7 @@ userRouter.post('/signup', async (req, res) => {
   try {
     const user = await User.create(req.body);
     const token = jwt.sign({ userId: user.id }, secretKey);
-    console.log(`users.js 24: ${JSON.stringify(user)}`);
+    console.log(`     users.js 24: ${JSON.stringify(user)}`);
 
     res.status(201).json({
       token,

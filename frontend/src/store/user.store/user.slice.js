@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import http from '../../axios/http_common';
+import { http } from '../../axios/http_common';
 
 const usersAdapter = createEntityAdapter({
   selectId: (user) => user.id,
@@ -93,6 +93,8 @@ const usersSlice = createSlice({
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.createUserStatus = 'succeeded';
+        state.loginTokenStatus = 'idle';
+        state.loginTokenError = 'null';
         state.user = action.payload;
         // Set Token Etc
       })

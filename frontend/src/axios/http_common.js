@@ -1,8 +1,17 @@
 import axios from 'axios';
-import { axiosconfig as config } from './axiosconfig';
+import {
+  axiosHttpConfig as httpConfig,
+  axiosImageConfig as imageConfig,
+} from './axiosconfig';
 
-export default axios.create({
-  baseURL: config.BASEURL,
-  headers: config.HEADERS,
-  timeout: config.TIMEOUT,
+export const http = axios.create({
+  baseURL: httpConfig.BASEURL,
+  headers: httpConfig.HEADERS,
+  timeout: httpConfig.TIMEOUT,
+});
+
+export const httpImage = axios.create({
+  baseURL: imageConfig.BASEURL,
+  headers: imageConfig.HEADERS,
+  timeout: imageConfig.TIMEOUT,
 });

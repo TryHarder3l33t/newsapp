@@ -1,4 +1,6 @@
 /**
+ * So you can use modules
+ *  "type": "module",
  * default single export from a module that is not named
  * express.js file
  * export default function createApp() {... }
@@ -6,6 +8,15 @@
  * import express from 'express'
  * seed is a named function that is why it is in curly brackets
  * If you go to localhost:8080/ the server responds with at res.json({message: ' Welcome...'})
+ *
+ * This middleware function parses incoming JSON requests and
+ * makes the parsed data available on the req.body property.
+ *  app.use(express.json());
+ *
+ * This middleware function parses incoming form data encoded
+ * using the application/x-www-form-urlencoded content type. It
+ * makes the parsed data available on the req.body property.
+ *  app.use(express.urlencoded({ extended: true }));
  **/
 
 import express from 'express';
@@ -29,6 +40,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(cors(corsConfig));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', apiRouter);

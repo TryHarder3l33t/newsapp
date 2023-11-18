@@ -4,6 +4,7 @@ import { UsersPage } from './pages/user/users.page.js';
 import { UserPage } from './pages/user/user.page.js';
 import { UserCreatePage } from './pages/user/user.create.page.js';
 import { UserUpdatePage } from './pages/user/user.update.page.js';
+import { CreatePostPage } from './pages/posts/post.create.js';
 
 export const router = createBrowserRouter([
   {
@@ -25,5 +26,9 @@ export const router = createBrowserRouter([
   {
     path: 'profile/:userId',
     element: <UserUpdatePage />,
+  },
+  {
+    path: 'postcreate',
+    element: <CreatePostPage />,
   },
 ]);
