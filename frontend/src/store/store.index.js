@@ -3,7 +3,7 @@
  */
 
 import { configureStore } from '@reduxjs/toolkit';
-import usersReducer from './user.store/user.slice.js';
+import usersReducer from './users.slice.js';
 
 export default configureStore({
   reducer: {

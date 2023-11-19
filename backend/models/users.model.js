@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize as db } from '../db.index.js';
+import { sequelize as db } from '../db/index.db.js';
 /**
  * Sequelize along with the driver pg talk to the database
  * User is a table in the database. You define it here

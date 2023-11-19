@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
   axiosHttpConfig as httpConfig,
   axiosImageConfig as imageConfig,
-} from './axiosconfig';
+} from './config.axios.js';
 
 export const http = axios.create({
   baseURL: httpConfig.BASEURL,

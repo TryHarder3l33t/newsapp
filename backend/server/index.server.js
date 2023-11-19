@@ -20,8 +20,8 @@
  **/
 
 import express from 'express';
-import { seed } from '../db/seed.js';
-import { apiRouter } from './api/api.index.js';
+import { seed } from '../db/seed.db.js';
+import { apiRouter } from '../api/index.api.js';
 import cors from 'cors';
 import { rateLimit } from 'express-rate-limit';
 

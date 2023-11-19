@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   selectUsersById,
   setReadUserStatusIdle,
-} from '../../store/user.store/user.slice';
+} from '../../store/users.slice.js';
 import { Link, useNavigate } from 'react-router-dom';
 
+// Do you see
 export const UserFeature = ({ userId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

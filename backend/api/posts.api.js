@@ -1,10 +1,10 @@
 import express from 'express';
-import { User } from '../../db/models/users.js';
+import { Post } from '../models/posts.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { dbconfig as config } from '../../db/db.config.js';
+import { dbconfig as config } from '../db/config.db.js';
 
-export const userRouter = express.Router();
+export const postsRouter = express.Router();
 
 const secretKey = config.SECRET_KEY;
 
@@ -36,10 +36,15 @@ userRouter.get('/loginToken', async (req, res) => {
   }
 });
 
-// create signup
-userRouter.post('/signup', async (req, res) => {
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  req.body.password = hashedPassword;
+// create signup YOU ARE HERE
+postsRouter.post('/', async (req, res) => {
+  //const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  //req.body.password = hashedPassword;
+
+  const imageEncodedName = req.bady.imageEncodedName;
+  const decoded = jwt.verify(imageEncodedName, secretKey);
+  const decodedName = decoded.imageEncodedName;
+
   try {
     const user = await User.create(req.body);
     const token = jwt.sign({ userId: user.id }, secretKey);

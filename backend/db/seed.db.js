@@ -1,5 +1,5 @@
-import { sequelize } from './db.index.js';
-import { User } from './models/users.js';
+import { sequelize } from './index.db.js';
+import { User } from '../models/users.model.js';
 
 export const seed = async () => {
   try {

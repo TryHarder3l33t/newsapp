@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   createUser,
   setCreateUserStatusIdle,
-} from '../../store/user.store/user.slice';
+} from '../../store/users.slice.js';
 import { useNavigate } from 'react-router-dom';
-import { loginToken } from '../../store/user.store/user.slice';
+import { loginToken } from '../../store/users.slice.js';
 
 // Sign Up
 export const UserCreatePage = () => {

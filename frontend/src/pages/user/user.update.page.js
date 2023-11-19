@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { readUser, updateUser } from '../../store/user.store/user.slice';
+import { readUser, updateUser } from '../../store/users.slice.js';
 import { useParams } from 'react-router-dom';
 
 // Profile

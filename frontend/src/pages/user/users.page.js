@@ -4,7 +4,7 @@ import {
   selectAllUsers,
   selectUsersById,
   selectUsersIds,
-} from '../../store/user.store/user.slice.js';
+} from '../../store/users.slice.js';
 import { useEffect } from 'react';
 import { UserFeature } from '../../features/user/user.feature.js';
 

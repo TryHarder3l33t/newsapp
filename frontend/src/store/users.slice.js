@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from '@reduxjs/toolkit';
 
-import { http } from '../../axios/http_common';
+import { http } from '../axios/http_common.axios.js';
 
 const usersAdapter = createEntityAdapter({
   selectId: (user) => user.id,

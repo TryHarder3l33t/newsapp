@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { dbconfig as config } from './db.config.js';
+import { dbconfig as config } from './config.db.js';
 
 /**
  * Sequelize is an ORM used to interact with postgresql

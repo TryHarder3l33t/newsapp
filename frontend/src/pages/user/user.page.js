@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  readUser,
-  setReadUserStatusIdle,
-} from '../../store/user.store/user.slice';
+import { readUser, setReadUserStatusIdle } from '../../store/users.slice';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export const UserPage = () => {
