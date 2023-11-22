@@ -3,7 +3,6 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
-
 import { http } from '../axios/http_common.axios.js';
 
 const usersAdapter = createEntityAdapter({
@@ -30,6 +29,26 @@ const initialState = usersAdapter.getInitialState({
   deleteUserError: null,
   loginTokenError: null,
 });
+// Forgot Password
+export const forgotPassword = createAsyncThunk(
+  'user/forgotPassword',
+  async (formData) => {
+    console.log(formData.get('email'));
+    const { data } = await http.post('/users/forgotpassword', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (data) {
+      console.log('data');
+    }
+    if (!data) {
+      console.log('no data');
+    }
+  }
+);
+
 // Login With Token
 export const loginToken = createAsyncThunk(
   'user/loginToken',

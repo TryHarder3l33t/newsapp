@@ -26,4 +26,16 @@ export const Post = db.define('post', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  content: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  imageURL: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });

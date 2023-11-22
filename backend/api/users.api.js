@@ -3,10 +3,39 @@ import { User } from '../models/users.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { dbconfig as config } from '../db/config.db.js';
+import multer from 'multer';
+import crypto from 'crypto';
+const upload = multer();
 
 export const usersRouter = express.Router();
 
 const secretKey = config.SECRET_KEY;
+
+// Forgot password
+usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({
+    where: {
+      email: email,
+    },
+    attributes: ['email', 'firstName'],
+  });
+
+  if (user) {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTimeOut = new Date();
+    resetTimeOut.setMinutes(resetTimeOut.getMinutes() + 15);
+    user.resetToken = resetToken;
+    user.resetTimeOut = resetTimeOut;
+    await user.save();
+
+    console.log(resetTimeOut);
+  } else {
+    // No user send empty data field
+    res.send(user);
+  }
+});
 
 // Login Token
 usersRouter.get('/loginToken', async (req, res) => {
@@ -19,7 +48,9 @@ usersRouter.get('/loginToken', async (req, res) => {
 
   const userId = decoded.userId;
 
-  const user = await User.findByPk(userId);
+  const user = await User.findByPk(userId, {
+    attributes: ['firstName', 'lastName', 'postId', 'anonId'],
+  });
 
   if (!user || !token) {
     res.status(401).json({ message: 'Invalid Token' });

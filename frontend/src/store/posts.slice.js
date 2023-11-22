@@ -23,29 +23,34 @@ const initialState = postsAdapter.getInitialState({
 export const createPostImage = createAsyncThunk(
   'posts/createPost',
   async (formData) => {
-    const firstName = formData.get('firstName');
-    const lastName = formData.get('lastName');
+    const title = formData.get('title');
+    const content = formData.get('content');
+    const token = formData.get('token');
     const data = formData.get('data');
-    formData.delete('firstName');
-    formData.delete('lastName');
+    formData.delete('title');
+    formData.delete('content');
 
     const payload = {};
-    payload.firstName = firstName;
-    payload.lastName = lastName;
+    payload.title = title;
+    payload.content = content;
 
     if (data) {
       const {
-        data: { response, imageNameEncoded },
+        data: { response, imageEncodedName },
       } = await httpImage.post('/postsimage', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(response);
-      console.log(imageNameEncoded);
+      payload.imageEncodedName = imageEncodedName;
+      payload.response = response;
     }
 
-    const postResponse = await http.post('');
+    const postResponse = await http.post('/posts', payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 );
 

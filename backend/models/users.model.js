@@ -23,7 +23,6 @@ export const User = db.define('user', {
     defaultValue: DataTypes.UUIDV4,
     unique: true,
   },
-
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -40,5 +39,13 @@ export const User = db.define('user', {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  resetToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  resetTimeOut: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 });

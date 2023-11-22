@@ -5,6 +5,7 @@ import { UserPage } from './pages/user/user.page.js';
 import { UserCreatePage } from './pages/user/user.create.page.js';
 import { UserUpdatePage } from './pages/user/user.update.page.js';
 import { CreatePostPage } from './pages/posts/post.create.js';
+import { ForgotPasswordPage } from './pages/user/user.forgot.password.page.js';
 
 export const router = createBrowserRouter([
   {
@@ -30,5 +31,9 @@ export const router = createBrowserRouter([
   {
     path: 'postcreate',
     element: <CreatePostPage />,
+  },
+  {
+    path: 'forgotpassword',
+    element: <ForgotPasswordPage />,
   },
 ]);

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createPostImage } from '../../store/posts.slice.js';
 
 export const CreatePostPage = () => {
   const [image, setImage] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   const dispatch = useDispatch();
 
@@ -14,12 +14,12 @@ export const CreatePostPage = () => {
     setImage(file);
   };
 
-  const onFirstNameSelected = (event) => {
-    setFirstName(event.target.value);
+  const onTitleSelected = (event) => {
+    setTitle(event.target.value);
   };
 
-  const onLastNameSelected = (event) => {
-    setLastName(event.target.value);
+  const onContentSelected = (event) => {
+    setContent(event.target.value);
   };
 
   const submit = async (event) => {
@@ -28,8 +28,9 @@ export const CreatePostPage = () => {
     const formData = new FormData();
     if (image) {
       formData.append('data', image);
-      formData.append('firstName', firstName);
-      formData.append('lastName', lastName);
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('token', localStorage.getItem('token'));
       await dispatch(createPostImage(formData));
     }
   };
@@ -42,17 +43,17 @@ export const CreatePostPage = () => {
         className='flex flex-col space-y-5 px-5 py-14'
       >
         <input
-          value={firstName}
-          onChange={onFirstNameSelected}
+          value={title}
+          onChange={onTitleSelected}
           type='text'
-          placeholder='FirstName'
+          placeholder='Title'
         ></input>
         <br />
         <input
-          value={lastName}
-          onChange={onLastNameSelected}
+          value={content}
+          onChange={onContentSelected}
           type='text'
-          placeholder='LastName'
+          placeholder='Content'
         ></input>
         <br />
         <input onChange={onFileSelected} type='file' accept='image/*'></input>

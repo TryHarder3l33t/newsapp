@@ -44,7 +44,7 @@ postsImageRouter.post('/', upload.single('data'), async (req, res) => {
     .jpeg({ mozjpeg: true })
     .toBuffer();
   const imageName = randomImageName();
-  const imageNameEncoded = jwt.sign(
+  const imageEncodedName = jwt.sign(
     { imageEncodedName: imageName },
     process.env.JWT_SECRET
   );
@@ -61,5 +61,5 @@ postsImageRouter.post('/', upload.single('data'), async (req, res) => {
   const response = await s3.send(command);
   console.log('Success image Upload');
 
-  res.json({ response, imageNameEncoded });
+  res.json({ response, imageEncodedName });
 });
