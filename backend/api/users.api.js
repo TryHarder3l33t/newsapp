@@ -5,7 +5,15 @@ import jwt from 'jsonwebtoken';
 import { dbconfig as config } from '../db/config.db.js';
 import multer from 'multer';
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+
 const upload = multer();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: '',
+  pass: '',
+});
 
 export const usersRouter = express.Router();
 
@@ -24,11 +32,24 @@ usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
 
   if (user) {
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTimeOut = new Date();
-    resetTimeOut.setMinutes(resetTimeOut.getMinutes() + 15);
-    user.resetToken = resetToken;
-    user.resetTimeOut = resetTimeOut;
-    await user.save();
+    let resetTimeOut = new Date();
+    resetTimeOut = resetTimeOut.setMinutes(resetTimeOut.getMinutes() + 15);
+    // Reset Info in the DB
+    const updateUser = await User.update(
+      {
+        resetToken: resetToken,
+        resetTimeOut: resetTimeOut,
+      },
+      { where: { email: email } }
+    );
+    // Send Reset Email
+    const resetLink = `http://localhost:3000/password-reset/?token=${resetToken}&email=${email}`;
+    const mailOptions = {
+      from: 'your-email@gmail.com',
+      to: email,
+      subject: 'Password Reset Request',
+      text: `Please click the following link to reset your password: ${resetLink}`,
+    };
 
     console.log(resetTimeOut);
   } else {
