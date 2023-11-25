@@ -42,9 +42,11 @@ export const forgotPassword = createAsyncThunk(
 
     if (data) {
       console.log('data');
+      return data;
     }
     if (!data) {
       console.log('no data');
+      return data;
     }
   }
 );

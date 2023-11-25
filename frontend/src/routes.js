@@ -6,6 +6,7 @@ import { UserCreatePage } from './pages/user/user.create.page.js';
 import { UserUpdatePage } from './pages/user/user.update.page.js';
 import { CreatePostPage } from './pages/posts/post.create.js';
 import { ForgotPasswordPage } from './pages/user/user.forgot.password.page.js';
+import { UserPasswordResetPage } from './pages/user/user.password.reset.js';
 
 export const router = createBrowserRouter([
   {
@@ -35,5 +36,9 @@ export const router = createBrowserRouter([
   {
     path: 'forgotpassword',
     element: <ForgotPasswordPage />,
+  },
+  {
+    path: 'password-reset/:token/:email',
+    element: <UserPasswordResetPage />,
   },
 ]);

@@ -6,23 +6,18 @@ import { dbconfig as config } from '../db/config.db.js';
 import multer from 'multer';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const upload = multer();
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: '',
-  pass: '',
-});
-
 export const usersRouter = express.Router();
-
-const secretKey = config.SECRET_KEY;
 
 // Forgot password
 usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
   const { email } = req.body;
 
+  // Validate whether the email exists in db
   const user = await User.findOne({
     where: {
       email: email,
@@ -30,10 +25,12 @@ usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
     attributes: ['email', 'firstName'],
   });
 
+  // If user send an email with the url
   if (user) {
     const resetToken = crypto.randomBytes(32).toString('hex');
     let resetTimeOut = new Date();
     resetTimeOut = resetTimeOut.setMinutes(resetTimeOut.getMinutes() + 15);
+
     // Reset Info in the DB
     const updateUser = await User.update(
       {
@@ -42,14 +39,43 @@ usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
       },
       { where: { email: email } }
     );
+
     // Send Reset Email
-    const resetLink = `http://localhost:3000/password-reset/?token=${resetToken}&email=${email}`;
+    const resetLink = `${process.env.FRONTEND_URL}/password-reset/?token=${resetToken}&email=${email}`;
     const mailOptions = {
-      from: 'your-email@gmail.com',
+      from: `${process.env.RESET_SITE_EMAIL}`,
       to: email,
       subject: 'Password Reset Request',
       text: `Please click the following link to reset your password: ${resetLink}`,
     };
+
+    const transporter = nodemailer.createTransport({
+      host: `${process.env.SPARK_POST_HOST}`,
+      port: process.env.SPARK_POST_PORT,
+      auth: {
+        user: `${process.env.SPARK_POST_USERNAME}`,
+        pass: `${process.env.SPARK_POST_API_KEY_PASSWORD}`,
+      },
+    });
+
+    const sendPasswordResetEmail = async (email, resetToken) => {
+      const resetLink = `${process.env.FRONTEND_URL}/password-reset/?token=${resetToken}&email=${email}`;
+
+      const mailOptions = {
+        from: `${process.env.RESET_SITE_EMAIL}`,
+        to: email,
+        subject: 'Password Reset Request',
+        text: `Please click the following link to reset your password ${resetLink}`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      console.log('Password already sent');
+      res.status(200);
+    };
+    //await sendPasswordResetEmail(email, resetToken);
+    console.log(email);
+    //console.log(field.email);
 
     console.log(resetTimeOut);
   } else {
@@ -65,7 +91,7 @@ usersRouter.get('/loginToken', async (req, res) => {
     res.status(401).json({ message: 'Unathorized' });
   }
   const token = authorizationHeader.split(' ')[[1]];
-  const decoded = jwt.verify(token, secretKey);
+  const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
   const userId = decoded.userId;
 
@@ -94,7 +120,7 @@ usersRouter.post('/signup', async (req, res) => {
   req.body.password = hashedPassword;
   try {
     const user = await User.create(req.body);
-    const token = jwt.sign({ userId: user.id }, secretKey);
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
     console.log(`     users.js 24: ${JSON.stringify(user)}`);
 
     res.status(201).json({

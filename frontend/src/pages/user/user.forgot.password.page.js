@@ -15,6 +15,7 @@ export const ForgotPasswordPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     formData.append('email', email);
+    setEmail('');
     const yesNoMaybe = await dispatch(forgotPassword(formData));
   };
   return (
