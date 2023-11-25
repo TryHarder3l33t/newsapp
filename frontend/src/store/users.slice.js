@@ -29,6 +29,22 @@ const initialState = usersAdapter.getInitialState({
   deleteUserError: null,
   loginTokenError: null,
 });
+
+// Password Reset
+export const passwordReset = createAsyncThunk(
+  '/user/passwordReset',
+  async (formData) => {
+    const { data } = await http.put('/users/passwordreset', formData, {
+      headers: { 'Content-Type': 'multipart/form/data' },
+    });
+    if (data) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+);
+
 // Forgot Password
 export const forgotPassword = createAsyncThunk(
   'user/forgotPassword',
@@ -41,7 +57,7 @@ export const forgotPassword = createAsyncThunk(
     });
 
     if (data) {
-      console.log('data');
+      console.log(data);
       return data;
     }
     if (!data) {

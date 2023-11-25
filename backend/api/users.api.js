@@ -13,6 +13,46 @@ const upload = multer();
 
 export const usersRouter = express.Router();
 
+// Password Reset
+usersRouter.put('/passwordreset', upload.none(), async (req, res) => {
+  console.log('Hit');
+  const { email, token, password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      where: {
+        email: email,
+      },
+      attributes: ['resetToken', 'resetTimeOut'],
+    });
+    let now = new Date();
+    now = now.setMinutes(now.getMinutes());
+
+    if (user && token === user.resetToken && user.resetTimeOut > now) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const updatedData = {
+        password: hashedPassword,
+      };
+      try {
+        const user = await User.update(updatedData, {
+          where: { email: email },
+        });
+        if (user) {
+          res.send(user);
+        } else {
+          res.send(null);
+        }
+      } catch (error) {
+        res.send(null);
+      }
+    } else {
+      res.send(null);
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 // Forgot password
 usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
   const { email } = req.body;
@@ -59,7 +99,7 @@ usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
     });
 
     const sendPasswordResetEmail = async (email, resetToken) => {
-      const resetLink = `${process.env.FRONTEND_URL}/password-reset/?token=${resetToken}&email=${email}`;
+      const resetLink = `${process.env.FRONTEND_URL}/password-reset/${resetToken}/${email}`;
 
       const mailOptions = {
         from: `${process.env.RESET_SITE_EMAIL}`,
@@ -68,16 +108,12 @@ usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
         text: `Please click the following link to reset your password ${resetLink}`,
       };
 
-      await transporter.sendMail(mailOptions);
+      const response = await transporter.sendMail(mailOptions);
 
-      console.log('Password already sent');
-      res.status(200);
+      return response;
     };
-    //await sendPasswordResetEmail(email, resetToken);
-    console.log(email);
-    //console.log(field.email);
-
-    console.log(resetTimeOut);
+    const passResponse = await sendPasswordResetEmail(email, resetToken);
+    res.send(passResponse);
   } else {
     // No user send empty data field
     res.send(user);
@@ -152,10 +188,8 @@ usersRouter.get('/', async (req, res) => {
 
 // Read One
 usersRouter.get('/:userId', async (req, res) => {
-  console.log(`userId ${req.params.userId}`);
   try {
     const data = await User.findByPk(req.params.userId);
-    console.log(data);
     res.json(data);
   } catch (error) {
     console.log(`FindOne error ${error}`);
@@ -172,7 +206,6 @@ usersRouter.put('/', async (req, res) => {
       email: req.body.email,
     });
     const updated = await data.save();
-    console.log(updated);
     res.json(updated);
   } catch (error) {}
 });
