@@ -120,7 +120,7 @@ usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
   }
 });
 
-// Login Token
+// Login With Token
 usersRouter.get('/loginToken', async (req, res) => {
   const authorizationHeader = req.headers.authorization;
   if (!authorizationHeader) {
@@ -180,6 +180,8 @@ usersRouter.post('/signup', async (req, res) => {
 usersRouter.get('/', async (req, res) => {
   try {
     const data = await User.findAll({});
+    console.log('---------- this is the data -------');
+    console.log(data);
     res.json(data);
   } catch (error) {
     console.log(`UserRouter Get Error ${error}`);

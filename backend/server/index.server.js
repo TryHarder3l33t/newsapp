@@ -33,7 +33,7 @@ const corsConfig = {
 };
 const limiter = rateLimit({
   windowMs: 1000, // 15 * 60 * 1000-> 15 minutes
-  limit: 3,
+  limit: 4,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
 });
@@ -56,4 +56,4 @@ app.listen(PORT, () => {
   console.log(`  You are listening on port http://localhost:${PORT}  `);
 });
 
-//seed();
+seed(1000);

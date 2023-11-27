@@ -22,6 +22,7 @@ const initialState = usersAdapter.getInitialState({
   updateUserStatus: 'idle',
   deleteUserStatus: 'idle',
   loginTokenStatus: 'idle',
+
   createUserError: null,
   readUserError: null,
   readUsersError: null,
@@ -71,12 +72,12 @@ export const forgotPassword = createAsyncThunk(
 export const loginToken = createAsyncThunk(
   'user/loginToken',
   async (payload) => {
-    const response = await http.get('/users/loginToken', {
+    const { data } = await http.get('/users/loginToken', {
       headers: {
         Authorization: `Bearer ${payload}`,
       },
     });
-    return response.data;
+    return data;
   }
 );
 
@@ -84,31 +85,32 @@ export const loginToken = createAsyncThunk(
 export const createUser = createAsyncThunk(
   'user/createUser',
   async (payload) => {
-    const response = await http.post(`/users/signup`, payload);
-    const token = response.data.token;
+    const data = await http.post(`/users/signup`, payload);
+    const token = data.token;
     if (token) {
       localStorage.setItem('token', token);
     }
-    return response.data;
+    return data;
   }
 );
 // Read User
 export const readUser = createAsyncThunk('user/readUser', async (id) => {
-  const response = await http.get(`/users/${id}`);
-  return response.data;
+  const { data } = await http.get(`/users/${id}`);
+  return data;
 });
+
 // Read All Users
 export const readUsers = createAsyncThunk('users/readUsers', async () => {
-  const response = await http.get('/users');
-  return response.data;
+  const { data } = await http.get('/users');
+  return data;
 });
 // Update User
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (payload) => {
-    const response = await http.put(`/users`, payload);
-    console.log(response);
-    return response.data;
+    const { data } = await http.put(`/users`, payload);
+    console.log(data);
+    return data;
   }
 );
 
@@ -121,6 +123,10 @@ const usersSlice = createSlice({
     },
     setReadUserStatusIdle(state, action) {
       state.readUserStatus = 'idle';
+    },
+    loginTokenStatusAndErrorReset(state, action) {
+      state.loginTokenError = null;
+      state.loginTokenStatus = 'idle';
     },
   },
   extraReducers(builder) {
@@ -199,15 +205,29 @@ const usersSlice = createSlice({
   },
 });
 
-export const { setCreateUserStatusIdle, setReadUserStatusIdle } =
-  usersSlice.actions;
+// Actions that manupulate the state in the reducer
+export const {
+  setCreateUserStatusIdle,
+  setReadUserStatusIdle,
+  loginTokenStatusAndErrorReset,
+} = usersSlice.actions;
 
+// Imported to the store so the slice can ve used
 export default usersSlice.reducer;
 
+// For the entities
 export const {
+  selectIds: selectAllUserIds,
   selectAll: selectAllUsers,
   selectById: selectUsersById,
   selectIds: selectUsersIds,
+  selectTotal: selectTotalNumberOfUsers,
 } = usersAdapter.getSelectors((state) => state.users);
 
+// Get things from the state cannot manipulate state on read state
+// Manipulate state in reducer as an action and export wtih the userSlice.actiions above
 export const selectUser = (state) => state.user;
+
+/**
+ *
+ */

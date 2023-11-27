@@ -7,6 +7,8 @@ import { UserUpdatePage } from './pages/user/user.update.page.js';
 import { CreatePostPage } from './pages/posts/post.create.js';
 import { ForgotPasswordPage } from './pages/user/user.forgot.password.page.js';
 import { UserPasswordResetPage } from './pages/user/user.password.reset.js';
+import { PostsReadPage } from './pages/posts/posts.read.page.js';
+import { PostReadPage } from './pages/posts/post.read.page.js';
 
 export const router = createBrowserRouter([
   {
@@ -40,5 +42,13 @@ export const router = createBrowserRouter([
   {
     path: 'password-reset/:token/:email',
     element: <UserPasswordResetPage />,
+  },
+  {
+    path: 'posts',
+    element: <PostsReadPage />,
+  },
+  {
+    path: 'post/:id',
+    element: <PostReadPage />,
   },
 ]);

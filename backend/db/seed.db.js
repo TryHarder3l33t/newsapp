@@ -2,18 +2,34 @@ import { sequelize } from './index.db.js';
 import { User } from '../models/users.model.js';
 import { Post } from '../models/posts.model.js';
 
-export const seed = async () => {
-  try {
-    await sequelize.sync({ force: true });
-    const firstPost = await Post.create({
-      postId: 123456,
-      firstName: 'Elmo',
-      lastName: 'Tickle',
-      title: 'First Post',
-      content: 'This is a story of a little Fart',
+const posts = async (num) => {
+  for (let post = 0; post < num; post++) {
+    const newNum = post + 1;
+    await Post.create({
+      postId: newNum,
+      firstName: `EricClone${newNum}`,
+      lastName: `Doe${newNum}`,
+      title: `Post Number ${newNum}`,
+      content: 'Some content',
       imageURL:
         'https://simple.wikipedia.org/wiki/Smiley#/media/File:Smiley.svg',
     });
+  }
+};
+
+export const seed = async (num) => {
+  try {
+    await sequelize.sync({ force: true });
+    // const firstPost = await Post.create({
+    //   postId: 123456,
+    //   firstName: 'Elmo',
+    //   lastName: 'Tickle',
+    //   title: 'First Post',
+    //   content: 'This is a story of a little Fart',
+    //   imageURL:
+    //     'https://simple.wikipedia.org/wiki/Smiley#/media/File:Smiley.svg',
+    // });
+    posts(num);
     const eric = await User.create({
       firstName: 'Eric M Rodgers',
       lastName: 'Rodgers',

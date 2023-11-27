@@ -43,7 +43,7 @@ const secretKey = process.env.SECRET_KEY;
 });
  */
 
-// create signup YOU ARE HERE
+// Create Post
 postsRouter.post('/', async (req, res) => {
   console.log(req.body);
   console.log(secretKey);
@@ -90,38 +90,33 @@ postsRouter.post('/', async (req, res) => {
   //console.log(user);
   console.log(user.id);
   console.log(user.postId);
+
   res.json(post);
+});
 
-  //console.log(req.body);
-  //const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  //req.body.password = hashedPassword;
+// Read Posts With Pagination
+postsRouter.get('/', async (req, res) => {
+  console.log('Hit here');
 
-  /**
-  const imageEncodedName = req.body.imageEncodedName;
-  const decoded = jwt.verify(imageEncodedName, secretKey);
-  const decodedName = decoded.imageEncodedName;
-
+  const { page = 1, pageSize = 10 } = req.query;
+  console.log('page', page);
+  console.log('pageSize', pageSize);
   try {
-    const user = await User.create(req.body);
-    const token = jwt.sign({ userId: user.id }, secretKey);
-    console.log(`     users.js 24: ${JSON.stringify(user)}`);
+    const posts = await Post.findAndCountAll({
+      limit: parseInt(pageSize),
+      offset: (page - 1) * pageSize,
+    });
+    //console.log(posts);
 
-    res.status(201).json({
-      token,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      postId: user.postId,
-      anonId: user.anonId,
+    res.json({
+      totalPages: Math.ceil(posts.count / pageSize),
+      posts: posts.rows,
+      page: page,
     });
   } catch (error) {
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      res.status(400).json({ message2: 'Username already exists' });
-    } else {
-      console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-    **/
 });
 
 // Read All

@@ -23,11 +23,12 @@ export const UserUpdatePage = ({ match }) => {
   const onEmailChanged = (e) => setEmail(e.target.value);
 
   const onSaveUserClicked = () => {
-    const payload = {};
-    payload.id = user.id;
-    payload.firstName = firstName === '' ? user.firstName : firstName;
-    payload.lastName = lastName === '' ? user.lastName : lastName;
-    payload.email = email === '' ? user.email : email;
+    const payload = {
+      id: user.id,
+      firstName: firstName === '' ? user.firstName : firstName,
+      lastName: lastName === '' ? user.lastName : lastName,
+      email: email === '' ? user.email : email,
+    };
     console.log(JSON.stringify(payload));
     dispatch(updateUser(payload));
   };

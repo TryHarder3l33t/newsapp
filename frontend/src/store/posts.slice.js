@@ -16,12 +16,18 @@ const initialState = postsAdapter.getInitialState({
     postId: null,
     anonId: null,
   },
-  createPostStatus: 'idle',
-  createPostsError: null,
+  page: 1,
+  totalPages: 1,
+  createPostImageStatus: 'idle',
+  readPostsStatus: 'idle',
+
+  createPostImageError: null,
+  readPostsError: null,
 });
 
+// Create Post
 export const createPostImage = createAsyncThunk(
-  'posts/createPost',
+  'posts/createPostImage',
   async (formData) => {
     const title = formData.get('title');
     const content = formData.get('content');
@@ -54,14 +60,57 @@ export const createPostImage = createAsyncThunk(
   }
 );
 
+// Read All The Posts
+export const readPosts = createAsyncThunk(
+  'posts/readPosts',
+  async ({ page = 1, pageSize = 10 }) => {
+    console.log('readPosts');
+    console.log(page);
+    const params = {
+      page: page,
+      pageSize: pageSize,
+    };
+    const { data } = await http.get(`/posts?page=${page}&pageSize=10`);
+    console.log(data);
+    return data;
+  }
+);
+
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {},
-  extraReducers(builder) {},
+  extraReducers(builder) {
+    builder
+      .addCase(createPostImage.pending, (state, action) => {
+        state.createPostImageStatus = 'loading';
+      })
+      .addCase(createPostImage.fulfilled, (state, action) => {
+        state.createPostImageStatus = 'succeeded';
+      })
+      .addCase(createPostImage.rejected, (state, action) => {
+        if (state.createPostImageStatus !== 'succeede') {
+          state.createPostImageStatus = 'error';
+          state.createPostImageError = `Error ${action.error.message}`;
+        }
+      })
+      .addCase(readPosts.pending, (state, action) => {
+        state.readPostsStatus = 'loading';
+      })
+      .addCase(readPosts.fulfilled, (state, action) => {
+        postsAdapter.upsertMany(state, action.payload.posts);
+        state.page = action.payload.page;
+        state.totalPages = action.payload.totalPages;
+        state.readPostsStatus = 'succeeded';
+      })
+      .addCase(readPosts.rejected, (state, action) => {
+        state.readPostsStatus = 'error';
+        state.readPostsError = `Error ${action.error.message}`;
+      });
+  },
 });
 
-// export const {} = postsSlice.actions
+// export const {these are the reducer actions} = postsSlice.actions
 
 export default postsSlice.reducer;
 
@@ -70,3 +119,6 @@ export const {
   selectById: selectPostsById,
   selectIds: selectPostsIds,
 } = postsAdapter.getSelectors((state) => state.posts);
+
+export const selectPage = (state) => state.posts.page;
+export const selectTotalPages = (state) => state.posts.totalPages;

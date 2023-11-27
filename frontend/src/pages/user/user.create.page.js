@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createUser,
+  loginTokenStatusAndErrorReset,
   setCreateUserStatusIdle,
 } from '../../store/users.slice.js';
 import { useNavigate } from 'react-router-dom';
@@ -10,17 +11,13 @@ import { loginToken } from '../../store/users.slice.js';
 // Sign Up
 export const UserCreatePage = () => {
   const dispatch = useDispatch();
-  // const login = (token) => {
-  //   console.log('logging in');
-  //   dispatch(login(token));
-  // };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+
     if (token) {
       dispatch(loginToken(token));
     }
-    //dispatch(setCreateUserStatusIdle());
   }, []);
 
   const createUserStatus = useSelector((state) => state.users.createUserStatus);
@@ -40,11 +37,12 @@ export const UserCreatePage = () => {
   const canSaveForm = firstName && lastName && email;
 
   const onSaveSignUpClicked = () => {
-    const payload = {};
-    payload.firstName = firstName;
-    payload.lastName = lastName;
-    payload.email = email;
-    payload.password = password;
+    const payload = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    };
 
     if (canSaveForm) {
       try {
