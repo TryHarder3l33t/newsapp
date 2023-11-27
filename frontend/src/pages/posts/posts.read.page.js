@@ -28,6 +28,8 @@ export const PostsReadPage = () => {
   const rowRenderer = ({ index, key, style }) => (
     <div key={key} style={style}>
       <img
+        width={100}
+        height={100}
         src={posts[index].imageURL}
         alt={`localhost:3000/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg`}
       />
@@ -57,7 +59,7 @@ export const PostsReadPage = () => {
         {({ width, height }) => (
           <List
             width={width}
-            height={500}
+            height={1000}
             rowCount={posts.length}
             rowHeight={200}
             rowRenderer={rowRenderer}

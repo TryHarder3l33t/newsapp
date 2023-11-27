@@ -12,7 +12,7 @@ const posts = async (num) => {
       title: `Post Number ${newNum}`,
       content: 'Some content',
       imageURL:
-        'https://simple.wikipedia.org/wiki/Smiley#/media/File:Smiley.svg',
+        'https://newspaper-images-7477.s3.amazonaws.com/ad739f5a463a97476377fde54799ba9761eed62d46ceec9b94348e666af43428',
     });
   }
 };
@@ -20,15 +20,6 @@ const posts = async (num) => {
 export const seed = async (num) => {
   try {
     await sequelize.sync({ force: true });
-    // const firstPost = await Post.create({
-    //   postId: 123456,
-    //   firstName: 'Elmo',
-    //   lastName: 'Tickle',
-    //   title: 'First Post',
-    //   content: 'This is a story of a little Fart',
-    //   imageURL:
-    //     'https://simple.wikipedia.org/wiki/Smiley#/media/File:Smiley.svg',
-    // });
     posts(num);
     const eric = await User.create({
       firstName: 'Eric M Rodgers',

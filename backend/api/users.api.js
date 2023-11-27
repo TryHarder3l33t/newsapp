@@ -130,10 +130,12 @@ usersRouter.get('/loginToken', async (req, res) => {
   const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
   const userId = decoded.userId;
+  console.log(userId);
 
   const user = await User.findByPk(userId, {
     attributes: ['firstName', 'lastName', 'postId', 'anonId'],
   });
+  console.log(user);
 
   if (!user || !token) {
     res.status(401).json({ message: 'Invalid Token' });
@@ -156,6 +158,7 @@ usersRouter.post('/signup', async (req, res) => {
   req.body.password = hashedPassword;
   try {
     const user = await User.create(req.body);
+    console.log('UserId', user.id);
     const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
     console.log(`     users.js 24: ${JSON.stringify(user)}`);
 

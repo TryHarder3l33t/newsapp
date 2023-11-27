@@ -85,9 +85,10 @@ export const loginToken = createAsyncThunk(
 export const createUser = createAsyncThunk(
   'user/createUser',
   async (payload) => {
-    const data = await http.post(`/users/signup`, payload);
+    const { data } = await http.post(`/users/signup`, payload);
     const token = data.token;
     if (token) {
+      console.log(token);
       localStorage.setItem('token', token);
     }
     return data;

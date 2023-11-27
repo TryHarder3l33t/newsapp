@@ -56,4 +56,4 @@ app.listen(PORT, () => {
   console.log(`  You are listening on port http://localhost:${PORT}  `);
 });
 
-//seed(1000);
+seed(1000);
