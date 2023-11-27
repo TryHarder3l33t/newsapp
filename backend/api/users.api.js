@@ -85,7 +85,7 @@ usersRouter.post('/forgotpassword', upload.none(), async (req, res) => {
     const mailOptions = {
       from: `${process.env.RESET_SITE_EMAIL}`,
       to: email,
-      subject: 'Password Reset Request',
+      subject: 'Its News Now Password Reset',
       text: `Please click the following link to reset your password: ${resetLink}`,
     };
 
