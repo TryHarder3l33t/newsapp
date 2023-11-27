@@ -59,7 +59,7 @@ export const PostsReadPage = () => {
         {({ width, height }) => (
           <List
             width={width}
-            height={1000}
+            height={window.innerHeight}
             rowCount={posts.length}
             rowHeight={200}
             rowRenderer={rowRenderer}
